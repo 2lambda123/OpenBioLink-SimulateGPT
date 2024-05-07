@@ -21,7 +21,7 @@ for res_file in glioblastoma_results.iterdir():
     gene_combination = res_file.name.split("--")[1].replace("generated_", "")
     if res_file.name.endswith("swp"):  # vim -.-
         continue
-    parsed = yaml.load(res_file.read_text(), Loader=yaml.FullLoader)
+    parsed = yaml.load(res_file.read_text(), Loader=yaml.SafeLoader)
 
     outcome = parsed["conclusion"]["outcome"]
     print(outcome)
