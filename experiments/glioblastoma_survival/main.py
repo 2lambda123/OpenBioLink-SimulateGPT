@@ -56,7 +56,7 @@ except NameError:
         if case_id in case_genes and len(case_genes[case_id]) > 0:
             continue
         # query the API, get the response as dict (json)
-        response = requests.get(URL % case_id).json()
+        response = requests.get(URL % case_id, timeout=60).json()
         hits = response["data"]["hits"]
         assert response["data"]["pagination"]["pages"] == 1  #
 

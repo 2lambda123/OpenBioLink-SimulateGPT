@@ -10,8 +10,8 @@ from pathlib import Path
 def get_doi(input_string):
     # Send a request to the Crossref API
     response = requests.get(
-        "https://api.crossref.org/works", params={"query": input_string}
-    )
+        "https://api.crossref.org/works", params={"query": input_string}, 
+    timeout=60)
 
     # Parse the response
     data = json.loads(response.text)

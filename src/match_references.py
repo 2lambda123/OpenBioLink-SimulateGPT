@@ -6,7 +6,7 @@ from fuzzywuzzy import fuzz
 
 def get_info(input_doi):
     # Send a request to the Crossref API
-    response = requests.get("https://api.crossref.org/works/" + input_doi)
+    response = requests.get("https://api.crossref.org/works/" + input_doi, timeout=60)
 
     # Parse the response
     data = json.loads(response.text)
