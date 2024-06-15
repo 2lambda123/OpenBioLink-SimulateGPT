@@ -4,9 +4,10 @@ Generate prompts for Glioblastoma survival simulation scenario
 
 import pandas as pd
 from pathlib import Path
-import time, requests
+import time
 from langchain.prompts import StringPromptTemplate
 from pydantic import BaseModel, validator
+from security import safe_requests
 
 # Load data
 df = pd.read_csv(f"data/clinical.tsv", sep="\t")
@@ -56,7 +57,7 @@ except NameError:
         if case_id in case_genes and len(case_genes[case_id]) > 0:
             continue
         # query the API, get the response as dict (json)
-        response = requests.get(URL % case_id).json()
+        response = safe_requests.get(URL % case_id).json()
         hits = response["data"]["hits"]
         assert response["data"]["pagination"]["pages"] == 1  #
 

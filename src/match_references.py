@@ -1,12 +1,12 @@
 import pandas as pd
-import requests
 import json
 from fuzzywuzzy import fuzz
+from security import safe_requests
 
 
 def get_info(input_doi):
     # Send a request to the Crossref API
-    response = requests.get("https://api.crossref.org/works/" + input_doi)
+    response = safe_requests.get("https://api.crossref.org/works/" + input_doi)
 
     # Parse the response
     data = json.loads(response.text)
