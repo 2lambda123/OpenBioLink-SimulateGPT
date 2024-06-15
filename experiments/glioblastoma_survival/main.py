@@ -77,6 +77,21 @@ except NameError:
 
 # group by case_id and take the string concatenation of the deduplicated group
 def agg_same_case(x):
+    """Aggregate cases based on case_id and return the concatenated string of
+    deduplicated groups.
+
+    This function checks if the input series has only one unique value or if
+    the first value is not a string. If either condition is met, it returns
+    the most frequent value in the series. Otherwise, it concatenates the
+    deduplicated values with '__'.
+
+    Args:
+        x (pandas.Series): A pandas Series containing values to be aggregated.
+
+    Returns:
+        str: The aggregated string based on the conditions.
+    """
+
     if len(x.drop_duplicates()) == 1 or not isinstance(x.iloc[0], str):
         return x.value_counts().index[0]
     else:
@@ -108,8 +123,15 @@ case_df["top10_filtered_genes"] = case_df["genes"].map(
 
 # Add the "MGMT gene"
 def _add_mgmt_methyl(mgmt_level):
-    """
-    Splits were inferred visually from the data distribution
+    """    Assigns a methylation level category based on the input value.
+
+    Splits were inferred visually from the data distribution.
+
+    Args:
+        mgmt_level (float): The methylation level to categorize.
+
+    Returns:
+        str: The category of methylation level based on the input value.
     """
     if mgmt_level < 0.62:
         return "MGMT_low_methylated"
@@ -151,12 +173,26 @@ class GlioblastomaPromptTemplate(StringPromptTemplate, BaseModel):
 
     @validator("input_variables")
     def validate_input_variables(cls, v):
-        """Validate that the input variables are correct."""
+        """        Validate that the input variables are correct.
+
+        This function checks if the input variables contain exactly two elements
+        and if 'genes' and 'wt_genes' are present.
+        """
         if len(v) != 2 or "genes" not in v or "wt_genes" not in v:
             raise ValueError("[wt_]genes must be the input_variables.")
         return v
 
     def format(self, **kwargs) -> str:
+        """Format the prompt template with the provided genes and wild-type genes
+        information.
+
+        Args:
+            **kwargs: Keyword arguments containing 'genes' (list) and 'wt_genes' (list).
+
+        Returns:
+            str: Formatted prompt template with genes and wild-type genes information.
+        """
+
         # Load the prompt
         prompt = Path("prompt_template").read_text()
 
@@ -181,6 +217,14 @@ class GlioblastomaPromptTemplate(StringPromptTemplate, BaseModel):
         return prompt.format(genes=genes, wt_genes=wt_genes)
 
     def _prompt_type(self):
+        """Return the type of prompt as 'glioblastoma'.
+
+        This function returns the type of prompt as 'glioblastoma'.
+
+        Returns:
+            str: The type of prompt as 'glioblastoma'.
+        """
+
         return "glioblastoma"
 
 
